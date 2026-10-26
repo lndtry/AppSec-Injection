@@ -35,11 +35,12 @@ function render_header(string $pageTitle, string $active = ''): void
             <a class="<?= $active === 'home' ? 'active' : '' ?>" href="<?= e(url_for('index.php')) ?>">Beranda</a>
             <a href="<?= e(url_for('index.php', ['search' => '']) ) ?>#produk">Kategori</a>
             <a href="<?= e(url_for('index.php')) ?>#promo">Promo</a>
-            <details class="nav-dropdown" <?= in_array($active, ['customers', 'upload', 'guide'], true) ? 'open' : '' ?>>
-                <summary class="<?= in_array($active, ['customers', 'upload', 'guide'], true) ? 'active' : '' ?>">Pusat Seller <span class="chevron">⌄</span></summary>
+            <details class="nav-dropdown" <?= in_array($active, ['customers', 'upload', 'aktivitas', 'guide'], true) ? 'open' : '' ?>>
+                <summary class="<?= in_array($active, ['customers', 'upload', 'aktivitas', 'guide'], true) ? 'active' : '' ?>">Pusat Seller <span class="chevron">⌄</span></summary>
                 <div class="dropdown-menu">
                     <a href="<?= e(url_for('customers.php')) ?>"><span>♙</span><span>Data pelanggan<small>CRM & pencarian pelanggan</small></span></a>
                     <a href="<?= e(url_for('upload.php')) ?>"><span>⇧</span><span>Verifikasi dokumen<small>Unggah bukti / dokumen seller</small></span></a>
+                    <a href="<?= e(url_for('aktivitas.php')) ?>"><span>◷</span><span>Aktivitas<small>Log kunjungan & filter kota</small></span></a>
                     <a href="<?= e(url_for('readme.php')) ?>"><span>ⓘ</span><span>Panduan & keamanan<small>Pelajari dua mode aplikasi</small></span></a>
                 </div>
             </details>

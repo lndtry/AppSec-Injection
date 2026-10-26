@@ -9,6 +9,14 @@ CREATE TABLE IF NOT EXISTS pelanggan (
     alamat VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Tabel log kunjungan untuk halaman Aktivitas (entry point header/cookie SQLi).
+CREATE TABLE IF NOT EXISTS kunjungan (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    waktu DATETIME NOT NULL,
+    ip VARCHAR(255) NOT NULL,
+    perangkat VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Dataset fiktif. Jika aplikasi pertama kali dibuka, PHP juga dapat mengimpor CSV otomatis.
 INSERT IGNORE INTO pelanggan (id, nama, email, telepon, alamat) VALUES
 (1, 'Andi Saputra', 'andi@example.test', '081200000101', 'Jakarta'),

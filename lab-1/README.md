@@ -40,6 +40,29 @@ Database `pasarkita_lab`, tabel `pelanggan`, dan data contoh biasanya dibuat saa
 4. Pindah ke **Patched** dan coba input yang sama. Prepared statement memperlakukannya sebagai teks pencarian biasa.
 5. Buka **Pusat Seller → Verifikasi dokumen**. Pada mode Non-patched, `payloads/command-demo.php` dapat diunggah untuk mengamati eksekusi PHP pada lab lokal. Pindah ke Patched dan file PHP ditolak; hanya JPG/PNG/PDF dengan MIME yang sesuai diterima.
 
+## Titik SQL injection (ringkasan)
+
+Lab ini menyediakan beberapa jenis dan entry point SQL injection pada mode Non-patched. Semua punya pasangan versi Patched. Gunakan hanya di lab lokal ini.
+
+**Dari kolom form / parameter URL — Data pelanggan:**
+
+1. **Pencarian (`q`) — konteks string/LIKE.** Contoh: `' OR 1=1#`
+2. **Pengurutan (`urut`) — konteks ORDER BY.** Ubah di URL, mis. `&urut=email` atau `urut=(CASE WHEN 1=1 THEN nama ELSE email END)`. Patch-nya bukan prepared statement melainkan whitelist nama kolom.
+3. **Detail (`id`) — konteks numerik tanpa kutip / UNION.** Mis. `?id=1 OR 1=1` atau `?id=0 UNION SELECT 1,nama,email,telepon,alamat FROM pelanggan`.
+
+**Dari luar form (header & cookie) — halaman Aktivitas:**
+
+4. **Header HTTP `X-Forwarded-For` — konteks INSERT.** Diuji dengan curl/Postman, bukan form:
+
+   ```bash
+   curl -H "X-Forwarded-For: x', (SELECT GROUP_CONCAT(nama,0x3a,email) FROM pelanggan))-- " "http://127.0.0.1:8080/aktivitas.php?mode=non-patched"
+   ```
+
+   Data pelanggan akan bocor ke kolom `perangkat` pada log kunjungan.
+5. **Cookie `kota` — konteks SELECT.** Ubah cookie lewat DevTools atau header, mis. `kota=Jakarta' OR '1'='1` untuk menampilkan semua pelanggan.
+
+Di mode Patched, semua input (termasuk dari header dan cookie) memakai prepared statement, nama kolom pengurutan divalidasi dengan whitelist, dan `id` dipaksa menjadi integer.
+
 ## Troubleshooting koneksi database
 
 - `No connection could be made because the target machine actively refused it`: Start MySQL di XAMPP dan pastikan port `DB_PORT` benar.
