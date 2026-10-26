@@ -1,0 +1,8 @@
+# local / os
+*.log
+Thumbs.db
+.DS_Store
+
+# editor
+.vscode/
+.idea/
